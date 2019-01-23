@@ -13,7 +13,7 @@ int main()
                 else
       {
   for(int i = 1; i < n + 1; i++)
-  {std::cout << "Input " << i << ". number:";
+  {std::cout << "Input " << i << ". number: ";
   int luku = 0;
   std::cin >> luku;
   sum+=luku;
