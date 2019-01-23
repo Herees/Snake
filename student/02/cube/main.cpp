@@ -7,6 +7,8 @@ int main()
     cout << "Enter a number: ";
     int n = 0;
     cin >> n;
+    if (n==0)
+    {cout << "The cube of 0 is 0."<<endl;}
     int n3 = 0;
     n3 = n*n*n;
     if (n3/n != n*n){
