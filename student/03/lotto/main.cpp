@@ -23,7 +23,7 @@ if (palloja <0){
 
 }
 else if(veto>palloja){
-    cout << "At most the total number of balls can be drawn."<<endl;
+    cout << "The maximum number of drawn balls is the total amount of balls."<<endl;
 }
 else{
 unsigned long int pelle = kertoma(palloja);
