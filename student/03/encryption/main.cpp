@@ -17,7 +17,7 @@ if(!(kirjain<="z"&&kirjain>="a")){
     cout<<"Error! The encryption key must contain only lower case characters."<<endl;
     return EXIT_FAILURE;
 }
-for (int i=0;i<tarkistus.length();i++){
+for (unsigned int i=0;i<tarkistus.length();i++){
     std::string tarkistin=tarkistus.substr(i,1);
     if(tarkistin==kirjain){
         cout<<"Error! The encryption key must contain all alphabets a-z."<<endl;
@@ -29,7 +29,7 @@ string viesti;
 cout<<"Enter the text to be encrypted: ";
 cin>>viesti;
 string salaus;
-for (int i = 0; i<viesti.length();i++){
+for (unsigned int i = 0; i<viesti.length();i++){
 string kirj=viesti.substr(i,1);
 const char *kirja=kirj.c_str();
 int asc=int(*kirja);
