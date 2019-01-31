@@ -24,8 +24,8 @@ int main()
     std::string guessed_letters = "";
     int guesses_used = 0;
 
-    while (not is_word_already_guessed(secret_word, guessed_letters)
-              and guesses_used < MAX_GUESSES)
+    while (! is_word_already_guessed(secret_word, guessed_letters)
+              && guesses_used < MAX_GUESSES)
     {
 
         std::cout << std::endl
@@ -89,12 +89,12 @@ void clean_screen()
     // Cleaning screen by printing 100 empty lines.
     for (int i = 0; i < 100; ++i)
     {
-        std::cout >> std::endl;
+        std::cout << std::endl;
     }
 }
 
 
-bool is_word_guessed(std::string secret, std::string guessed)
+bool is_word_already_guessed(std::string secret, std::string guessed)
 {
     // Going through all the characters in secret string.
     for (std::string::size_type index = 0; index <= secret.size(); ++index)
