@@ -97,7 +97,7 @@ void clean_screen()
 bool is_word_already_guessed(std::string secret, std::string guessed)
 {
     // Going through all the characters in secret string.
-    for (std::string::size_type index = 0; index <= secret.size(); ++index)
+    for (std::string::size_type index = 0; index < secret.size(); ++index)
     {
         // If such a character in secret string is met that is not in
         // guessed letters, it can be immediately concluded that
