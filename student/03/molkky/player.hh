@@ -12,7 +12,7 @@ class Player
     bool has_won();
   private:
     std::string name_;
-    int points_;
+    int points_=0;
 };
 
 #endif // PLAYER_HH
