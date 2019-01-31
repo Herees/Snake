@@ -1,8 +1,8 @@
 #include "player.hh"
 #include <string>
 #include <iostream>
-Player::Player(std::string layer){
-    name_ = layer;
+Player::Player(std::string Player){
+    name_ = Player;
 }
 std::string Player::get_name(){
 return name_;
@@ -20,7 +20,7 @@ std::cout << name_ <<" gets penalty points!"  << std::endl;
 }
 }
 bool Player::has_won(){
-    if(Player::get_points()==50){
+    if(Player::points_==50){
         return true;
     }
         return false;
