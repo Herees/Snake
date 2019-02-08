@@ -3,9 +3,58 @@
 #include <vector>
 
 
-// TODO: Implement split function here
-// Do not change main function
 
+std::vector <std::string> split(std::string line, char separator, bool asd = false)
+{
+    std::vector< std::string > a;
+    std::string helper = "";
+    if (asd)
+    {
+        int i = 0;
+        for (unsigned int i = 0; i < line.size(); ++i)
+        {
+            if (line[i]==separator)
+            {
+                    if (helper != "")
+                    {
+                    a.push_back(helper);
+                    helper = "";
+                    }
+            }
+            else
+            {
+                helper += line[i];
+            }
+        }
+        if (helper != "")
+        {
+            a.push_back(helper);
+        }
+        return a;}
+    else
+    {
+    int i = 0;
+    for (unsigned int i = 0; i < line.size(); ++i)
+    {
+        if (line[i]==separator)
+        {
+            {
+                a.push_back(helper);
+                helper = "";
+            }
+        }
+        else
+        {
+            helper += line[i];
+        }
+    }
+    if (helper != "")
+    {
+        a.push_back(helper);
+    }
+    return a;
+    }
+}
 
 int main()
 {
