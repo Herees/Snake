@@ -10,7 +10,6 @@ std::vector <std::string> split(std::string line, char separator, bool asd = fal
     std::string helper = "";
     if (asd)
     {
-        int i = 0;
         for (unsigned int i = 0; i < line.size(); ++i)
         {
             if (line[i]==separator)
@@ -33,7 +32,6 @@ std::vector <std::string> split(std::string line, char separator, bool asd = fal
         return a;}
     else
     {
-    int i = 0;
     for (unsigned int i = 0; i < line.size(); ++i)
     {
         if (line[i]==separator)
