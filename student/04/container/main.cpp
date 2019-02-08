@@ -42,7 +42,7 @@ bool is_arithmetic_series(std::vector< int >& ints)
     int a = ints[1]- ints[0];
     for (unsigned int i = 1; i < ints.size(); ++i)
     {
-        if (ints[i+1] - ints[i] != a)
+        if (ints[i] - ints[i-1] != a)
         {
             return false;
         }
