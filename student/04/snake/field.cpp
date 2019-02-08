@@ -161,7 +161,7 @@ void Field::moveSnake(const Point& new_head) {
         } else if (new_head != getTail()) {
             // If the destination square contains anything but the "neck" or
             // the tail, the snake dies.
-            dead_ == true;
+            dead_ = true;
             return;
         }
     }
