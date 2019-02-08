@@ -8,7 +8,7 @@
 # File: main.cpp                                                   #
 # Description: Starts executing the program.                       #
 #                                                                  #
-# Author: First Last, s.num., first.last@tuni.fi                   #
+# Author: Valtteri Kirsilä, 255342, valtteri.kirsila@tuni.fi       #
 ####################################################################
 */
 
@@ -64,28 +64,26 @@ void printHelp() {
  * prompt: Tells the player what to write.
  * return: The text written by the player.
  */
-std::string getInput(const std::string prompt = "> ")
-{
+std::string getInput(std::string prompt = "> ") {
     // Prompt the player for input.
     std::cout << prompt;
 
     // Wait for, read and return the input.
-    std::string input;
-    std::getline(std::cin, input);
+    std::string input = "";
+    getline(std::cin, input);
     return input;
 }
+
 
 /* Ask the player for a random seed.
  *
  * return: The given seed or current time.
  */
 unsigned int getRandomSeed() {
-    // Prompt the player for input.
-    const std::string seed = getInput("Give a seed for random numbers: ");
-
+//    // Prompt the player for input.
+    std::string seed = getInput("Give a seed for random numbers: ");
     // Convert (as much of) the string to a number if possible.
-    if (!seed.empty() && std::isdigit(seed.front()))
-    {
+    if (seed != "" && isdigit(seed.front())) {
         return static_cast<unsigned int>(std::stoi(seed));
         return 2;
     }
@@ -98,16 +96,17 @@ unsigned int getRandomSeed() {
     return static_cast<unsigned int>(secs.count());
 }
 
+
 /* Get a sensible width or height for a Field.
  *
  * prompt: Tells the player what to write.
  * return: The given Field size.
  */
-int getFieldSize(const std::string& prompt) {
+int getFieldSize(const std::string prompt) {
     int size = 0;
     while (size < 3 || size > 10) {
         // Prompt the player for input.
-        const std::string input = getInput(prompt);
+        std::string input = getInput(prompt);
 
         // Convert (as much of) the string to a number if possible.
         if (input != "" && std::isdigit(input.front())) {
@@ -129,12 +128,11 @@ int main() {
     // Print the help text when starting the game.
     printHelp();
     field.print();
-
     // Ask for input until the game stops.
     while (!field.gameOver()) {
         // Get and validate the input.
-        const std::string command = getInput();
-        if (!checkCommand(command)) {
+        std::string command = getInput();
+        if (!checkCommand(command)){
             // Let the player know if the input is invalid and try again.
             std::cout << "Unknown command! Try command 'help'." << std::endl;
             continue;

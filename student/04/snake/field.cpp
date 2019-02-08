@@ -8,7 +8,7 @@
 # File: field.cpp                                                  #
 # Description: Defines a class representing the game field.        #
 #                                                                  #
-# Author: First Last, s.num., first.last@tuni.fi                   #
+# Author: Valtteri Kirsilä, 255342, valtteri.kirsila@tuni.fi       #
 ####################################################################
 */
 
@@ -21,8 +21,8 @@ Field::Field(int width, int height, const std::default_random_engine& rng):
     rng_(rng) {
 
     // Create a snake whose head is about in the middle of the Field.
-    const Point head
-    {(width_ - 1) / 2, (height_ - 1) / 2};
+    const Point head{(width_ - 1) / 2, (height_ - 1) / 2};
+
     snake_.push_back(head);
 
     // Put food somewhere.
@@ -59,7 +59,7 @@ void Field::move(const std::string& direction) {
         ++new_head.x;
     }
 
-    // Check if the snake died after running into a wall.
+     //Check if the snake died after running into a wall.
     if ((new_head.x < 0 || new_head.x >= width_) ||
         (new_head.y < 0 || new_head.y >= height_)) {
         dead_ = true;
@@ -70,11 +70,10 @@ void Field::move(const std::string& direction) {
     moveSnake(new_head);
 }
 
-
 bool Field::isInSquare(const Point square) {
     // Check if any of the Points stored in snake_ match the given Point.
     for (const Point part : snake_) {
-        if (part != square) {
+        if (samePoint(part, square)) {
             return true;
         }
     }
@@ -82,8 +81,11 @@ bool Field::isInSquare(const Point square) {
     return false;
 }
 
+bool Field::samePoint(const Point p1, const Point p2){
+    return p1.x == p2.x && p1.y == p2.y;
+}
 
-void Field::print() {
+void Field::print()  {
     // Print the top wall.
     printHorizontalWall();
 
@@ -92,29 +94,31 @@ void Field::print() {
         std::cout << WALL;
         for (int col = 0; col < width_; ++col) {
             const Point position{col, row};
-            if (position == food_) {
+             if (samePoint(position, food_)) {
                 std::cout << FOOD;
-            } else if (isInSquare(position)){
-            if (gameLost()) {
-                std::cout << DEAD;
-            } else if (position == getHead()) {
-                std::cout << HEAD;
-            } else if (position == getTail()) {
-                std::cout << TAIL;
-            } else {
-                std::cout << BODY;
-            }
+            } else if (isInSquare(position)) {
+                 if (gameLost()) {
+                     std::cout << DEAD;
+                 } else if (samePoint(position, getHead())) {
+                     std::cout << HEAD;
+                 } else if (samePoint(position, getTail())) {
+                     std::cout << TAIL;
+                 } else {
+                     std::cout << BODY;
+                 }
             } else {
                 std::cout << EMPTY;
             }
-    }
-            std::cout << WALL << std::endl;
+
+        }
+        std::cout << WALL << std::endl;
     }
 
     // Print the bottom wall.
     printHorizontalWall();
-}
 
+
+}
 
 
 const Point& Field::getHead() const {
@@ -136,8 +140,8 @@ void Field::moveFood() {
     }
 
     // Keep trying random Points until an empty square is found.
-    std::uniform_int_distribution<int> width_dist(0, width_ -1);
-    std::uniform_int_distribution<int> height_dist(0, height_ -1);
+    std::uniform_int_distribution<int> width_dist(0, width_-1);
+    std::uniform_int_distribution<int> height_dist(0, height_-1);
     while (true) {
         food_.x = width_dist(rng_);
         food_.y = height_dist(rng_);
@@ -152,13 +156,13 @@ void Field::moveSnake(const Point& new_head) {
     // There shouldn't be any problems if the snake is only a head or
     // if it doesn't yet occupy the square it's moving into.
     if (snake_.size() > 1 && isInSquare(new_head)) {
-        const Point& neck = snake_[snake_.size() - 2];
-        if (new_head == neck) {
+        const Point& neck = snake_[snake_.size()-2];
+        if (samePoint(new_head, neck)) {
             // If the destination square is the square before the head,
             // don't move but don't die either.
             return;
 
-        } else if (new_head != getTail()) {
+        } else if (not samePoint(new_head, getTail())) {
             // If the destination square contains anything but the "neck" or
             // the tail, the snake dies.
             dead_ = true;
@@ -171,7 +175,7 @@ void Field::moveSnake(const Point& new_head) {
 
     // New food must be placed somewhere once one gets eaten.
     // Also, the snake should stretch a little.
-    if (new_head == food_) {
+    if (samePoint(new_head, food_)) {
         moveFood();
     } else {
         snake_.erase(snake_.begin());

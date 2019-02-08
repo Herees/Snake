@@ -8,7 +8,7 @@
 # File: field.hh                                                   #
 # Description: Declares a class representing the game field.       #
 #                                                                  #
-# Author: First Last, s.num., first.last@tuni.fi                   #
+# Author: Valtteri Kirsilä, 255342, valtteri.kirsila@tuni.fi       #
 ####################################################################
 */
 
@@ -86,19 +86,29 @@ public:
      * direction: One of constants defined above; Direction to move the head to.
      */
     void move(const std::string& direction);
+    void print() ;
+
+private:
 
     /* Print the Field and the snake in it.
      */
-    void print();
+
 
     /* Check if the snake currently occupies a certain square.
      *
      * square: Coordinates of the square to check.
      * return: `true` if a part of the snake is in the square.
      */
-private:
-
     bool isInSquare(const Point square);
+
+
+    /* Checks two points are those x and y values the same.
+     *
+     * p1: Coordinates of the point 1 to check.
+     * p2: Coordinates of the point 2 to check.
+     * return: `true` if the points are identic.
+     */
+    bool samePoint(const Point p1, const Point p2);
 
     /* Get the snake's head's coordinates.
      *
@@ -116,7 +126,7 @@ private:
      *
      * Hides the food if the snake has completely filled the Field.
      */
-    void moveFood();
+    void moveFood() ;
 
     /* Move the snake in some direction, eating anything in its path.
      *
