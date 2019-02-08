@@ -87,6 +87,7 @@ unsigned int getRandomSeed() {
     if (!seed.empty() && std::isdigit(seed.front()))
     {
         return static_cast<unsigned int>(std::stoi(seed));
+        return 2;
     }
 
     // Use current time as a seed if the given seed isn't a number.
@@ -109,7 +110,7 @@ int getFieldSize(const std::string& prompt) {
         const std::string input = getInput(prompt);
 
         // Convert (as much of) the string to a number if possible.
-        if (!input.empty() && std::isdigit(input.front())) {
+        if (input != "" && std::isdigit(input.front())) {
             size = std::stoi(input);
         }
     }
@@ -123,7 +124,7 @@ int main() {
     const int width = getFieldSize("Field width (between 3 and 10): ");
     const int height = getFieldSize("Field height (between 3 and 10): ");
     std::default_random_engine rng(getRandomSeed());
-    Field field(height, width, rng);
+    Field field(width, height, rng);
 
     // Print the help text when starting the game.
     printHelp();

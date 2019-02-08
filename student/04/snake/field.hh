@@ -61,7 +61,7 @@ public:
      * height: Specifies the field's height.
      * rng: Generates random numbers used to randomize food locations.
      */
-    Field(unsigned int width, unsigned int height, const std::default_random_engine& rng);
+    Field(int width, int height, const std::default_random_engine& rng);
 
     /* Check if the game is over.
      *

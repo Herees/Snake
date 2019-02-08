@@ -15,17 +15,14 @@
 #include "field.hh"
 #include <iostream>
 
-Field::Field(unsigned int width, unsigned int height, const std::default_random_engine& rng):
+Field::Field(int width, int height, const std::default_random_engine& rng):
     width_(width),
     height_(height),
     rng_(rng) {
 
     // Create a snake whose head is about in the middle of the Field.
     const Point head
-    {
-        .x = (width_ - 1) / 2,
-        .y = (height_ - 1) / 2
-    };
+    {(width_ - 1) / 2, (height_ - 1) / 2};
     snake_.push_back(head);
 
     // Put food somewhere.
@@ -33,7 +30,7 @@ Field::Field(unsigned int width, unsigned int height, const std::default_random_
 }
 
 bool Field::gameOver() const {
-    return gameLost() | gameWon();
+    return gameLost() || gameWon();
 }
 
 bool Field::gameWon() const {
@@ -93,7 +90,7 @@ void Field::print() {
     // Print rows with playable area.
     for (int row = 0; row < height_; ++row) {
         std::cout << WALL;
-        for (int col = 0; col < width_; ++row) {
+        for (int col = 0; col < width_; ++col) {
             const Point position{col, row};
             if (position == food_) {
                 std::cout << FOOD;
@@ -139,8 +136,8 @@ void Field::moveFood() {
     }
 
     // Keep trying random Points until an empty square is found.
-    std::uniform_int_distribution<int> width_dist(0, width_);
-    std::uniform_int_distribution<int> height_dist(0, height_);
+    std::uniform_int_distribution<int> width_dist(0, width_ -1);
+    std::uniform_int_distribution<int> height_dist(0, height_ -1);
     while (true) {
         food_.x = width_dist(rng_);
         food_.y = height_dist(rng_);
@@ -183,7 +180,7 @@ void Field::moveSnake(const Point& new_head) {
 
 void Field::printHorizontalWall() const {
     // Print a long enough wall to cover the Field and the walls at the sides.
-    for (int i = 0; i < width_; ++i) {
+    for (int i = 0; i < width_+2; ++i) {
         std::cout << WALL;
     }
     std::cout << std::endl;
