@@ -2,7 +2,6 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <map>
 
 const std::string HELP_TEXT = "S = store id1 i2\n P = print id\n"
                               "C = count id\n D = depth id";
