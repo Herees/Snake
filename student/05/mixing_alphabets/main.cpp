@@ -2,6 +2,10 @@
 #include <string>
 #include <algorithm>
 #include <random>
+#include <vector>
+
+using namespace std;
+
 
 int main()
 {
@@ -12,15 +16,17 @@ int main()
     std::cout << "Enter some text. Quit by entering the word \"END\"." << std::endl;
     std::string word;
 
-    while (std::cin >> word)
-    {
+    while (std::cin >> word) {
         if (word == "END")
         {
             return EXIT_SUCCESS;
         }
 
-        // TODO: implement your solution here
-	
-        std::cout << word << std::endl;
+        vector<char> data(word.begin(), word.end());
+        if(data.size() > 2)
+            shuffle(data.begin()+1, data.end()-1, generator);
+        string randyWord(data.begin(), data.end());
+
+        std::cout << randyWord << std::endl;
     }
 }
