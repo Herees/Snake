@@ -13,7 +13,7 @@ int main() {
 
     ifstream input(input_nimi);
     if (! input) {
-        cout << "Error! The file " << input_nimi << " could not be opened." << endl;
+        cout << "Error! The file " << input_nimi << " cannot be opened." << endl;
         return EXIT_FAILURE;
     } else {
         string row;
