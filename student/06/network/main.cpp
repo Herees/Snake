@@ -47,7 +47,6 @@ void store(string id1, string id2, map <string, Person>& network) {
 void print(string id, map <string, Person> network, int depth = 1) {
     if (isInNetwork(id, network)) {
         Person person = network.at(id);
-        cout << id << endl;
         for(size_t i=0;i<person.network.size();i++) {
             string dots;
             dots.insert(0, depth*2, '.');
@@ -112,7 +111,8 @@ int main()
                 cout << "Erroneous parameters!" << endl << HELP_TEXT;
             }
             string id = parts.at(1);
-
+            if(isInNetwork(id, network))
+                cout << network.at(id).name << endl;
             print(id, network);
 
         } else if(command == "C" or command == "c"){
