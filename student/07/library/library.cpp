@@ -14,10 +14,13 @@
 #include "library.hh"
 
 
-Library::Library(std::string libraryName):
-    libraryName_(libraryName)
-{
+Library::Library(string name) {
+    this->name = name;
+}
 
+vector<Book> Library::getBooks() {
+    sort(this->books.begin(), this->books.end());
+    return this->books;
 }
 
 void Library::addBook(Book book) {
@@ -29,12 +32,6 @@ void Library::addBook(Book book) {
     else
         this->books.push_back(book);
 }
-
-vector<Book> Library::getBooks() {
-    sort(this->books.begin(), this->books.end());
-    return this->books;
-}
-
 
 void Library::printBooks(string author) {
     vector<Book> books = this->getBooks();
@@ -49,8 +46,7 @@ void Library::printBooks(string author) {
         }
     }
 
-
-    // If no books by author exist, print error message
+    // If no books by author, print text below
     if(count == 0)
         cout << "Error: unknown author" << endl;
 }

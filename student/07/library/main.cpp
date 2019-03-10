@@ -188,7 +188,7 @@ void Loanable(vector<Book> books) {
     }
 }
 
-bool startUI(std::map<std::string, Library>& books) {
+bool startUI() {
     // UI asks inputVector until 'quit' is given
     // Checks that given command is available and has the proper amount of parameters
     // returns EXIT_SUCCESS boolean when the user wants to close program
@@ -218,43 +218,32 @@ bool startUI(std::map<std::string, Library>& books) {
                 printLibraries(libraries);
             }
         } else if ( inputVector.at(0) == "books") {
-            // books should only have "books" in it
-            if ( inputVector.size() != 1 ) {
+
+            if ( inputVector.size() != 3 ) {
                 command_error("books");
-            } else {
-                string libraryName = inputVector.at(1);
-                string author = inputVector.at(2);
-                  Library library = libraries.at(libraryName);
-                  library.printBooks(author);
+            }else{
+
+            string libraryName = inputVector.at(1);
+            string author = inputVector.at(2);
+
+            try {
+                Library library = libraries.at(libraryName);
+                library.printBooks(author);
+            } catch(const out_of_range& oor) {
+                cout << "Error: unknown library name" << endl;
+            }
             }
         } else if ( inputVector.at(0) == "material") {
 
-            // material has two parts, if no such library exists give error
             string libraryName = inputVector.at(1);
-            if ( inputVector.size() != 2 ) {
-                command_error("material");
 
-            } else if ( books.find( inputVector.at(1) ) != books.end() ) {
-                Library library = libraries.at(libraryName);
-                library.printMaterial();
+             try {
+                 Library library = libraries.at(libraryName);
+                 library.printMaterial();
+             } catch(const out_of_range& oor) {
+                 cout << "Error: unknown library name" << endl;
 
-            } else {
-                std::cout << "Error: unknown library name" << std::endl;
-            }
-
-        } else if ( inputVector.at(0) == "books") {
-
-            // books has 3 components,
-            // checks if library and book exists, printing error messages if not.
-            if ( inputVector.size() != 3 ) {
-                command_error("books");
-
-            } else if ( books.find( inputVector.at(1) ) == books.end() ) {
-                std::cout << "Error: unknown library name" << std::endl;
-            } else {
-                cout << "books komento tähän"<< endl;
-            }
-
+             }
         } else if ( inputVector.at(0) == "reservable" ) {
 
             // reservable has 2 components
@@ -279,8 +268,8 @@ bool startUI(std::map<std::string, Library>& books) {
             }
 
         } else {
-            // If none predetermined inputVector match print an error
-            std::cout << "Error: unknown command" << std::endl;
+            // If none predetermined commands match print an error
+            std::cout << "Error: Unknown command: " << input << std::endl;
         }
     }
     return EXIT_SUCCESS;
@@ -297,7 +286,7 @@ int main()
         return EXIT_FAILURE;
     }
     //Starts the user interface for the program
-    startUI(books);
+    startUI();
     return EXIT_SUCCESS;
 
 }
