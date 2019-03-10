@@ -22,7 +22,7 @@
 #include "library.hh"
 using namespace std;
 
-
+// Split-function given in week 6.
 std::vector<std::string> split(const std::string& s, const char delimiter, bool ignore_empty = true){
     std::vector<std::string> result;
     std::string tmp = s;
@@ -42,7 +42,7 @@ std::vector<std::string> split(const std::string& s, const char delimiter, bool 
     return result;
 }
 
-
+// Map for libraries and books.
 map<string, Library> libraries;
 
 
@@ -159,7 +159,7 @@ void printLibraries(map<string, Library> libraries) {
 void printReservable(map<string, Library> libraries, string title) {
     int minReservations = getMinReservations(libraries, title);
 
-    // no books by title in lib (minReservations has initial value)
+    // no books by title in library (minReservations at initial value)
     if (minReservations == 9999) {
         cout << "Book is not a library book." << endl;
         return;
@@ -180,7 +180,7 @@ void printReservable(map<string, Library> libraries, string title) {
         }
     }
 }
-
+// Function prints loanable books (in shelf)
 void Loanable(vector<Book> books) {
     for (auto book : books) {
         if(book.reservations == 0)
@@ -296,6 +296,7 @@ int main()
     if(not fileSuccess) {
         return EXIT_FAILURE;
     }
+    //Starts the user interface for the program
     startUI(books);
     return EXIT_SUCCESS;
 
