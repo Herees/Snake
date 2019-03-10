@@ -10,7 +10,8 @@
 #include <fstream>
 #include <algorithm>
 #include "library.hh"
-
+#include <cctype>
+using namespace std;
 
 
 std::vector<std::string> split(const std::string& s, const char delimiter, bool ignore_empty = true){
@@ -57,7 +58,6 @@ bool read_file_create_libraries_and_books( std::ifstream& fileStream, std::map<s
         // If there are erroneous lines in file close program with a error message
         // (erroneous includes empty cells, lines or not enough cells
         for (auto cell : lineContents) {
-            remove_if(cell.begin(), cell.end(), isspace);
             if (cell == " ") {
                     std::cout << "Error: the file has an erroneous line" << std::endl;
                     return false;
@@ -82,9 +82,106 @@ bool read_file_create_libraries_and_books( std::ifstream& fileStream, std::map<s
         }
 
     return true;
-
 }
 
+
+void command_error(std::string command) {
+    // Prints the chosen error message
+    // Parameters: string command
+    std::cout << "Error: error in command " << command << std::endl;
+}
+
+
+
+bool user_interface(std::map<std::string, Library>& libraries) {
+    // UI asks commands until 'quit' is given
+    // Checks that given command is available and has the proper amount of parameters
+    // returns EXIT_SUCCESS boolean when the user wants to close program
+    // Parameters: map<string, Chain> chains
+
+    bool quit = false;
+    std::string input;
+    std::vector<std::string> inputVector;
+    while ( !quit ) {
+        // for the input UI
+        std::cout << "> ";
+        std::getline( std::cin, input );
+        inputVector = split(input,' ');
+
+        // If empty line -> continue
+        if ( inputVector.size() == 0) {
+            continue;
+
+        // Close on quit
+        } else if (inputVector.at(0) == "quit"  ) {
+            quit = true;
+
+        } else if ( inputVector.at(0) == "libraries") {
+
+            // chains should only have "libraries" in it
+            if ( inputVector.size() != 1 ) {
+                command_error("libraries");
+            } else {
+            cout << "Tähän libraries komennon toteutus" << endl;
+            }
+        } else if ( inputVector.at(0) == "material") {
+
+            // material has two parts, if no such library exists give error
+            if ( inputVector.size() != 2 ) {
+                command_error("material");
+
+            } else if ( libraries.find( inputVector.at(1) ) != libraries.end() ) {
+                cout << "material komennon toteutus tähän" << endl;
+
+            } else {
+                std::cout << "Error: unknown library name" << std::endl;
+            }
+
+        } else if ( inputVector.at(0) == "books") {
+
+            // books has 3 components,
+            // checks if library and book exists, printing error messages if not.
+            if ( inputVector.size() != 3 ) {
+                command_error("books");
+
+            } else if ( libraries.find( inputVector.at(1) ) == libraries.end() ) {
+                std::cout << "Error: unknown library name" << std::endl;
+
+            //} else if ( !libraries.at(inputVector.at(1)).find_author( inputVector.at(2) ) ) {
+            //    std::cout << "Error: unknown author" << std::endl;
+
+            } else {
+                cout << "books komento tähän"<< endl;
+            }
+
+        } else if ( inputVector.at(0) == "reservable" ) {
+
+            // reservable has 2 components
+            // checks for the shortest reservation line for requested book
+            if ( inputVector.size() != 2 ) {
+                command_error("reservable");
+                continue;
+            }
+                cout<< "reservable funktion toteutus tähän" << endl;
+
+
+        } else if ( inputVector.at(0) == "loanable" ) {
+
+            // loanable has 1 component
+            if ( inputVector.size() != 1 ) {
+                command_error( "loanable" );
+
+            } else {
+                cout << "loanable funktion toteutus/kutsu tähän" << endl;
+            }
+
+        } else {
+            // If none predetermined commands match print an error
+            std::cout << "Error: unknown command" << std::endl;
+        }
+    }
+    return EXIT_SUCCESS;
+}
 
 int main()
 {
@@ -107,8 +204,7 @@ int main()
     if(!read_file_create_libraries_and_books(fileStream, libraries)) {
             return EXIT_FAILURE;
     }
-    //Implement UI
-    // user_interface(libraries);
+    user_interface(libraries);
     return EXIT_SUCCESS;
 
 }

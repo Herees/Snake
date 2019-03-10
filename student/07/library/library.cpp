@@ -11,3 +11,4 @@ Library::Library(std::string libraryName):
 
 }
 
+// Tarvitaan ainakin metodit find_book, find_author, ja add_book
