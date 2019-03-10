@@ -51,10 +51,15 @@ string combine(vector<string> words) {
     string title;
     for (size_t i=0; i<words.size();i++) {
         string word = words[i];
-        if (i == 0 and word.front() == '"')
+
+        // Remove " marks from start and begin
+        if (i == 0 && word.front() == '"')
             word.erase(word.begin(), word.begin()+1);
+
         if (i == words.size()-1 && word.back() == '"')
             word.erase(word.end()-1, word.end());
+
+        // Join words by space
         if (i == 0)
             title += word;
         else
@@ -159,7 +164,7 @@ void printLibraries(map<string, Library> libraries) {
 void printReservable(map<string, Library> libraries, string title) {
     int minReservations = getMinReservations(libraries, title);
 
-    // no books by title in library (minReservations at initial value)
+    // no books by title in lib (minReservations has initial value)
     if (minReservations == 9999) {
         cout << "Book is not a library book." << endl;
         return;
@@ -248,12 +253,10 @@ bool startUI() {
 
             // reservable has 2 components
             // checks for the shortest reservation line for requested book
-            if ( inputVector.size() != 2 ) {
-                command_error("reservable");
-                continue;
-            }
-                string title = combine(inputVector);
-                printReservable(libraries,title);
+
+            inputVector.erase(inputVector.begin(), inputVector.begin()+1);
+            string title = combine(inputVector);
+            printReservable(libraries, title);
 
 
         } else if ( inputVector.at(0) == "loanable" ) {
@@ -269,7 +272,7 @@ bool startUI() {
 
         } else {
             // If none predetermined commands match print an error
-            std::cout << "Error: Unknown command: " << input << std::endl;
+            std::cout << "Error: Unknown command: " << inputVector.at(0) << std::endl;
         }
     }
     return EXIT_SUCCESS;
