@@ -1,6 +1,16 @@
-// Valtteri Kirsilä, 255342, valtteri.kirsila@tuni.fi
-// main.cpp
-// Main function, split, file reading
+/*
+####################################################################
+# TIE-02207 Programming 2: Basics, S2019                           #
+#                                                                  #
+# Project2: Library                                                #
+# Program description: See library reservations and read csv file  #
+#                                                                  #
+# File: main.cpp                                                   #
+# Description: The main function, which starts the program.        #
+#                                                                  #
+# Author: Valtteri Kirsilä, 255342, valtteri.kirsila@tuni.fi       #
+####################################################################
+*/
 
 #include <iostream>
 #include <vector>
@@ -10,18 +20,12 @@
 #include <fstream>
 #include <algorithm>
 #include "library.hh"
-#include <cctype>
 using namespace std;
 
 
 std::vector<std::string> split(const std::string& s, const char delimiter, bool ignore_empty = true){
-    // Split function from a previous assignment
-    // Returns the line splitted to a vector
-    // Parameters: const string s ( file line ), const char delimiter, bool ignore_empty
     std::vector<std::string> result;
     std::string tmp = s;
-
-    // Splits line from the delimiter character to vector
     while(tmp.find(delimiter) != std::string::npos)
     {
         std::string new_part = tmp.substr(0, tmp.find(delimiter));
@@ -39,50 +43,104 @@ std::vector<std::string> split(const std::string& s, const char delimiter, bool 
 }
 
 
-bool read_file_create_libraries_and_books( std::ifstream& fileStream, std::map<std::string, Library>& libraries ) {
-    // Tries to open given file. If fails program shuts down.
-    // If succeeds creates new Library objects or adds a shop and its books to a existing one.
-    // Returns a true if succeeds else false
-    // Parameters: ifstream fileStream ( input file object ), map<string, Library> libraries
+map<string, Library> libraries;
 
-    // Variables for file line and its contents
-    std::string line;
-    std::vector<std::string> lineContents;
 
-    // Loops while there are lines in the file
-    while ( getline(fileStream, line ) ) {
+// combine vector strings to string
+string combine(vector<string> words) {
+    string title;
+    for (size_t i=0; i<words.size();i++) {
+        string word = words[i];
+        if (i == 0 and word.front() == '"')
+            word.erase(word.begin(), word.begin()+1);
+        if (i == words.size()-1 && word.back() == '"')
+            word.erase(word.end()-1, word.end());
+        if (i == 0)
+            title += word;
+        else
+            title += " " + word;
+    }
+    return title;
+}
 
-        // Splits the line to words to a vector
-        lineContents = split( line, ';' );
+// If book is on the shelf, its reservation count is 0. This function turns that string into an integer.
+int numReservations(string str) {
+    if(str == "on-the-shelf")
+        return 0;
+    else
+        return atoi(str.c_str());
+}
 
-        // If there are erroneous lines in file close program with a error message
-        // (erroneous includes empty cells, lines or not enough cells
-        for (auto cell : lineContents) {
-            if (cell == " ") {
-                    std::cout << "Error: the file has an erroneous line" << std::endl;
-                    return false;
-            }
+int getMinReservations(map<string, Library> libraries, string title) {
+    int minReservations = 9999;
+
+    for (auto library : libraries) {
+        for (auto book : library.second.books) {
+            if(book.reservations < minReservations && book.title == title)
+                minReservations = book.reservations;
         }
-        if ( lineContents.size() != 4 ) {
-            std::cout << "Error: the file has an erroneous line" << std::endl;
-            return false;
-        } else {
+    }
+    return minReservations;
+}
 
-            // If new library, creates a new Library object and adds it to the data structure
-            if ( libraries.find( lineContents.at(0) ) == libraries.end() ) {
-                Library new_library( lineContents.at(0) );
-                libraries.insert( { lineContents.at(0) ,new_library } );
-            }
+// Read row and return possible exception as a boolean
+bool read_row(string row, map<string, Library>& libraries) {
+    vector<string> result = split(row, ';');
+    if(result.size() != 4) {
+        cout << "Error: empty field" << endl;
+        return false;
+    }
+    string libraryName = result.at(0);
+    string author = result.at(1);
+    string title = result.at(2);
+    int reservations = numReservations(result.at(3));
+    Book book = {title, author, reservations};
 
-            // If library doesn't have given book, adds it
-            //if ( !libraries.at( lineContents.at(0) ).find_book( lineContents.at(1) )) {
-            //    libraries.at( lineContents.at(0) ).add_book( lineContents.at(1) );
-            }
-
-        }
-
+    if(libraries.find(libraryName) != libraries.end()) {
+        Library& library = libraries.at(libraryName);
+        library.addBook(book);
+    } else {
+        // Library was not found from libraries
+        // Create new library and add book
+        Library library(libraryName);
+        library.addBook(book);
+        libraries.insert(make_pair(libraryName, library));
+    }
     return true;
 }
+
+bool read_file(map<string, Library>& libraries) {
+    string inputName, row;
+    cout << "Input file: ";
+    getline(cin, inputName);
+    ifstream input(inputName);
+
+    if (!input) {
+        cout << "Error: the input file cannot be opened" << endl;
+        return false;
+    }
+
+    while ( getline(input, row) ) {
+        bool rowSuccess = read_row(row, libraries);
+        if(not rowSuccess)
+            return false;
+    }
+    input.close();
+    return true;
+}
+
+vector<Book> getBooks(map<string, Library> libraries) {
+    vector<Book> books;
+    for (auto& library : libraries) {
+        for (auto& book : library.second.books) {
+            books.push_back(book);
+        }
+    }
+    sort(books.begin(), books.end());
+    return books;
+}
+
+
 
 
 void command_error(std::string command) {
@@ -91,13 +149,50 @@ void command_error(std::string command) {
     std::cout << "Error: error in command " << command << std::endl;
 }
 
+void printLibraries(map<string, Library> libraries) {
+    // Print name of each library
+    for (auto& library : libraries) {
+        cout << library.first << endl;
+    }
+}
 
+void printReservable(map<string, Library> libraries, string title) {
+    int minReservations = getMinReservations(libraries, title);
 
-bool user_interface(std::map<std::string, Library>& libraries) {
-    // UI asks commands until 'quit' is given
+    // no books by title in lib (minReservations has initial value)
+    if (minReservations == 9999) {
+        cout << "Book is not a library book." << endl;
+        return;
+    } else if (minReservations >= 100) {
+        cout << "The book is not reservable from any library." << endl;
+        return;
+    }
+
+    if (minReservations == 0)
+        cout << "on the shelf" << endl;
+    else
+        cout << minReservations << " reservations" << endl;
+
+    for (auto& library : libraries) {
+        for (auto& book : library.second.books) {
+            if(book.reservations == minReservations && book.title == title)
+                cout << "--- " << library.first << endl;
+        }
+    }
+}
+
+void Loanable(vector<Book> books) {
+    for (auto book : books) {
+        if(book.reservations == 0)
+            cout << book.author << ": " << book.title << endl;
+    }
+}
+
+bool startUI(std::map<std::string, Library>& books) {
+    // UI asks inputVector until 'quit' is given
     // Checks that given command is available and has the proper amount of parameters
     // returns EXIT_SUCCESS boolean when the user wants to close program
-    // Parameters: map<string, Library> libraries
+    // Parameters: map<string, Library> books
 
     bool quit = false;
     std::string input;
@@ -116,22 +211,32 @@ bool user_interface(std::map<std::string, Library>& libraries) {
         } else if (inputVector.at(0) == "quit"  ) {
             quit = true;
 
-        } else if ( inputVector.at(0) == "libraries") {
-
-            // libraries should only have "libraries" in it
+        } else if (inputVector.at(0) == "libraries"  ) {
             if ( inputVector.size() != 1 ) {
                 command_error("libraries");
             } else {
-            cout << "Tähän libraries komennon toteutus" << endl;
+                printLibraries(libraries);
+            }
+        } else if ( inputVector.at(0) == "books") {
+            // books should only have "books" in it
+            if ( inputVector.size() != 1 ) {
+                command_error("books");
+            } else {
+                string libraryName = inputVector.at(1);
+                string author = inputVector.at(2);
+                  Library library = libraries.at(libraryName);
+                  library.printBooks(author);
             }
         } else if ( inputVector.at(0) == "material") {
 
             // material has two parts, if no such library exists give error
+            string libraryName = inputVector.at(1);
             if ( inputVector.size() != 2 ) {
                 command_error("material");
 
-            } else if ( libraries.find( inputVector.at(1) ) != libraries.end() ) {
-                cout << "material komennon toteutus tähän" << endl;
+            } else if ( books.find( inputVector.at(1) ) != books.end() ) {
+                Library library = libraries.at(libraryName);
+                library.printMaterial();
 
             } else {
                 std::cout << "Error: unknown library name" << std::endl;
@@ -144,12 +249,8 @@ bool user_interface(std::map<std::string, Library>& libraries) {
             if ( inputVector.size() != 3 ) {
                 command_error("books");
 
-            } else if ( libraries.find( inputVector.at(1) ) == libraries.end() ) {
+            } else if ( books.find( inputVector.at(1) ) == books.end() ) {
                 std::cout << "Error: unknown library name" << std::endl;
-
-            //} else if ( !libraries.at(inputVector.at(1)).find_author( inputVector.at(2) ) ) {
-            //    std::cout << "Error: unknown author" << std::endl;
-
             } else {
                 cout << "books komento tähän"<< endl;
             }
@@ -162,7 +263,8 @@ bool user_interface(std::map<std::string, Library>& libraries) {
                 command_error("reservable");
                 continue;
             }
-                cout<< "reservable funktion toteutus tähän" << endl;
+                string title = combine(inputVector);
+                printReservable(libraries,title);
 
 
         } else if ( inputVector.at(0) == "loanable" ) {
@@ -172,11 +274,12 @@ bool user_interface(std::map<std::string, Library>& libraries) {
                 command_error( "loanable" );
 
             } else {
-                cout << "loanable funktion toteutus/kutsu tähän" << endl;
+                vector<Book> books = getBooks(libraries);
+                Loanable(books);
             }
 
         } else {
-            // If none predetermined commands match print an error
+            // If none predetermined inputVector match print an error
             std::cout << "Error: unknown command" << std::endl;
         }
     }
@@ -186,25 +289,14 @@ bool user_interface(std::map<std::string, Library>& libraries) {
 int main()
 {
     // Map for Library class objects
-    std::map<std::string, Library> libraries;
-
-    // Gets filename
-    std::string fileName;
-    std::cout << "Input file: ";
-    getline(std::cin, fileName);
-
-    // If no such file exists return error message and close program
-    std::ifstream fileStream(fileName);
-    if (!fileStream) {
-        std::cout << "Error: the input file cannot be opened" << std::endl;
-        return EXIT_FAILURE;
-    }
+    std::map<std::string, Library> books;
 
     // If there is an error during reading the file close the program
-    if(!read_file_create_libraries_and_books(fileStream, libraries)) {
-            return EXIT_FAILURE;
+    bool fileSuccess = read_file(libraries);
+    if(not fileSuccess) {
+        return EXIT_FAILURE;
     }
-    user_interface(libraries);
+    startUI(books);
     return EXIT_SUCCESS;
 
 }
