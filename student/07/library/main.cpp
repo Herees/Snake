@@ -41,9 +41,9 @@ std::vector<std::string> split(const std::string& s, const char delimiter, bool 
 
 bool read_file_create_libraries_and_books( std::ifstream& fileStream, std::map<std::string, Library>& libraries ) {
     // Tries to open given file. If fails program shuts down.
-    // If succeeds creates new Chain objects or adds a shop and its products to a existing one.
+    // If succeeds creates new Library objects or adds a shop and its books to a existing one.
     // Returns a true if succeeds else false
-    // Parameters: ifstream fileStream ( input file object ), map<string, Chain> chains
+    // Parameters: ifstream fileStream ( input file object ), map<string, Library> libraries
 
     // Variables for file line and its contents
     std::string line;
@@ -97,7 +97,7 @@ bool user_interface(std::map<std::string, Library>& libraries) {
     // UI asks commands until 'quit' is given
     // Checks that given command is available and has the proper amount of parameters
     // returns EXIT_SUCCESS boolean when the user wants to close program
-    // Parameters: map<string, Chain> chains
+    // Parameters: map<string, Library> libraries
 
     bool quit = false;
     std::string input;
@@ -118,7 +118,7 @@ bool user_interface(std::map<std::string, Library>& libraries) {
 
         } else if ( inputVector.at(0) == "libraries") {
 
-            // chains should only have "libraries" in it
+            // libraries should only have "libraries" in it
             if ( inputVector.size() != 1 ) {
                 command_error("libraries");
             } else {
