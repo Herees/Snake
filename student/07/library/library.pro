@@ -5,7 +5,9 @@ CONFIG -= qt
 
 SOURCES += \
         main.cpp \
-    library.cpp
+    library.cpp \
+    functions.cpp
 
 HEADERS += \
-    library.hh
+    library.hh \
+    functions.hh

@@ -49,17 +49,17 @@ public:
     string name;
     vector<Book> books;
 
-    // Adds new book to the library if it was not found by author and title
-    // Otherwise sets reservations by the newest book
+    // Searches for the book, if it is not in the struct, adds it.
+    // Updates reservations if book exists in struct.
     void addBook(Book book);
+    //Sorts books in alphabetical order
+    vector<Book> sortBooks();
 
-    // Get sorted books by author and title
-    vector<Book> getBooks();
-
-    // Print book materials
+    // Prints books in asked library.
     void printMaterial();
 
-    // Print all books by author
+    // Print books by given author
+    // Input argument string author from user
     void printBooks(string author);
 
 

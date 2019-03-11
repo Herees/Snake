@@ -14,31 +14,27 @@
 #include "library.hh"
 
 
-Library::Library(string name) {
-    this->name = name;
-}
-
-vector<Book> Library::getBooks() {
-    sort(this->books.begin(), this->books.end());
-    return this->books;
-}
+Library::Library(string name): name(name) {
+                                   }
 
 void Library::addBook(Book book) {
-    vector<Book>::iterator bookIterator = find(this->books.begin(), this->books.end(), book);
-    bool bookExists = bookIterator != this->books.end();
-
-    if(bookExists)
+    vector<Book>::iterator bookIterator = find(books.begin(), books.end(), book);
+    if(bool(bookIterator != books.end()))
         bookIterator->reservations = book.reservations;
     else
-        this->books.push_back(book);
+        books.push_back(book);
+}
+vector<Book> Library::sortBooks() {
+    sort(books.begin(), books.end());
+    return books;
 }
 
 void Library::printBooks(string author) {
-    vector<Book> books = this->getBooks();
-    int count = 0;
+    sort(books.begin(), books.end());
+    int books_by_author = 0;
     for (auto book : books) {
         if(book.author == author) {
-            count += 1;
+            books_by_author += 1;
             if(book.reservations == 0)
                 cout << book.title << " --- " << "on the shelf" << endl;
             else
@@ -46,13 +42,14 @@ void Library::printBooks(string author) {
         }
     }
 
-    // If no books by author, print text below
-    if(count == 0)
+    // If no books are found, author doesn't exist in libraries. Print error message.
+    if(books_by_author == 0)
         cout << "Error: unknown author" << endl;
 }
 
 void Library::printMaterial() {
-    for (auto book : this->getBooks()) {
+    sort(books.begin(), books.end());
+    for (auto book : books) {
         cout << book.author << ": " << book.title << endl;
     }
 
