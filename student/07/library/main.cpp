@@ -2,8 +2,8 @@
 ####################################################################
 # TIE-02207 Programming 2: Basics, S2019                           #
 #                                                                  #
-# Project2: Library                                                #
-# Program description: See library reservations and read csv file  #
+# Project: Library                                                 #
+# Program description: Program for managing library reservations.  #
 #                                                                  #
 # File: main.cpp                                                   #
 # Description: The main function, which starts the program.        #

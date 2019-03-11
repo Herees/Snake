@@ -2,7 +2,7 @@
 ####################################################################
 # TIE-02207 Programming 2: Basics, S2019                           #
 #                                                                  #
-# Project2: Library                                                #
+# Project: Library                                                 #
 # Program description: Program for managing library reservations   #
 #                                                                  #
 # File: library.cpp                                                #

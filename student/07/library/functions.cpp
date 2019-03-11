@@ -1,3 +1,16 @@
+/*
+####################################################################
+# TIE-02207 Programming 2: Basics, S2019                           #
+#                                                                  #
+# Project: Library                                                 #
+# Program description: Program for managing library reservations   #
+#                                                                  #
+# File: functions.cpp                                              #
+# Description: All major functions of the program.                 #
+#                                                                  #
+# Author: Valtteri Kirsilä, 255342, valtteri.kirsila@tuni.fi       #
+####################################################################
+*/
 #include <iostream>
 #include <vector>
 #include <cstdlib>

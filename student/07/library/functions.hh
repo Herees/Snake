@@ -1,3 +1,16 @@
+/*
+####################################################################
+# TIE-02207 Programming 2: Basics, S2019                           #
+#                                                                  #
+# Project: Library                                                 #
+# Program description: Program for managing library reservations   #
+#                                                                  #
+# File: functions.hh                                               #
+# Description: Declarations for functions in functions.cpp.        #
+#                                                                  #
+# Author: Valtteri Kirsilä, 255342, valtteri.kirsila@tuni.fi       #
+####################################################################
+*/
 #ifndef FUNCTIONS_HH
 #define FUNCTIONS_HH
 

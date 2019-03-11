@@ -2,7 +2,7 @@
 ####################################################################
 # TIE-02207 Programming 2: Basics, S2019                           #
 #                                                                  #
-# Project2: Library                                                #
+# Project: Library                                                 #
 # Program description: See library books and reservations          #
 #                                                                  #
 # File: library.hh                                                 #
