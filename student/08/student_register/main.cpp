@@ -4,10 +4,10 @@
 #include <vector>
 #include <map>
 
-const std::string HELP_TEXT = "N = List ordered by student numbers\n"
-                              "U = List ordered alphabetically by user ids\n"
+const std::string HELP_TEXT = "N                  = List ordered by student numbers\n"
+                              "U                  = List ordered alphabetically by user ids\n"
                               "C <student_number> = Change the given student's phone number\n"
-                              "Q = Quit\n";
+                              "Q                  = Quit\n";
 
 struct Student {
     std::string student_number;
@@ -140,6 +140,7 @@ int main() {
             std::string replace;
             std::string in_file;
             std::cout << "Enter a new phone number: ";
+            std::cout <<"";
             getline(std::cin, number);
             if(is_valid_phone_number(number)){
             if(student_numbers.find(parts[1])!=student_numbers.end()){
