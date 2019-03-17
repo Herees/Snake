@@ -6,6 +6,7 @@
 
 const std::string HELP_TEXT = "N = List ordered by student numbers\n"
                               "U = List ordered alphabetically by user ids\n"
+                              "C <student_number> = Change the given student's phone number\n"
                               "Q = Quit\n";
 
 struct Student {
@@ -134,11 +135,13 @@ int main() {
                 std::cout << "Erroneous parameters!" << std::endl << HELP_TEXT;
                 continue;
             }
+
             std::string number;
             std::string replace;
             std::string in_file;
             std::cout << "Enter a new phone number: ";
             getline(std::cin, number);
+            if(is_valid_phone_number(number)){
             if(student_numbers.find(parts[1])!=student_numbers.end()){
                 replace = student_numbers.at(parts[1])->phone_number;
                 student_numbers.at(parts[1])->phone_number=number;
@@ -146,7 +149,7 @@ int main() {
                 std::ofstream outputFile("test1.txt");
                 std::string strTemp;
                 std::string file2be;
-                while(inputFile >> strTemp){
+                while(getline(inputFile >> std::ws, strTemp)){
                     if(strTemp == replace){
                         strTemp = number;
                     }
@@ -160,11 +163,10 @@ int main() {
                 std::ifstream in("test1.txt");
                 std::ofstream out(file_name);
                 while(in >> strTemp){
-                    strTemp += "\n";
                     out << strTemp;
                 }
             }
-
+            }
 
         } else if(command == "Q" or command == "q") {
             // Deleting the data structure: deallocating memory and nullifying pointers
