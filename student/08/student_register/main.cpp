@@ -140,8 +140,8 @@ int main() {
             std::string replace;
             std::string in_file;
             std::cout << "Enter a new phone number: ";
-            std::cout <<"";
             getline(std::cin, number);
+            std::cout <<""<<std::endl;
             if(is_valid_phone_number(number)){
             if(student_numbers.find(parts[1])!=student_numbers.end()){
                 replace = student_numbers.at(parts[1])->phone_number;
