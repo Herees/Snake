@@ -37,6 +37,8 @@ private:
         string reg_num;
         Vehicle* next;
     };
+        void dequeue(string& reg);
+        unsigned int pass_ = 0;
 
     // Pointer to the first vehicle in the traffic light queue
     Vehicle* first_ = nullptr;

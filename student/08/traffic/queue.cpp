@@ -58,16 +58,47 @@ void Queue::print(){
     }
 }
 
+void Queue::dequeue(string& regNum){
+    Vehicle* remove = first_;
+    regNum = remove->reg_num;
+    if (first_->next == nullptr){
+        first_ = nullptr;
+        last_ = nullptr;
+    } else {
+        first_ = first_-> next;
+    }
+    pass_++;
+    delete remove;
+}
+
 void Queue::switch_light(){
-
+    is_green_ = !(is_green_);
+    print();
+    if(is_green_){
+        Vehicle* nextVehicle = first_;
+        while(nextVehicle != nullptr and pass_ < cycle_){
+            dequeue(nextVehicle->reg_num);
+            nextVehicle = nextVehicle->next;
+        }
+        if(pass_ > 0){
+            is_green_= !(is_green_);
+            pass_ = 0;
+        }
+    }
 }
 
-/* void Queue::reset_cycle(unsigned int cycle){
-
+void Queue::reset_cycle(unsigned int cycle){
+    cycle_ = cycle;
 }
-*/
+
+
+
 
 Queue::~Queue() {
-
+    while (first_!=nullptr){
+        Vehicle* remove = first_;
+        first_ = first_->next;
+        delete remove;
+    }
 }
 
