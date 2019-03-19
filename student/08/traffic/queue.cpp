@@ -62,9 +62,10 @@ void Queue::switch_light(){
 
 }
 
-void Queue::reset_cycle(unsigned int cycle){
+/* void Queue::reset_cycle(unsigned int cycle){
 
 }
+*/
 
 Queue::~Queue() {
 
