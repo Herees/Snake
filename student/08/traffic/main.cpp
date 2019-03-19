@@ -20,7 +20,7 @@ int main()
             q.enqueue(reg);
         } else if ( choice == "p" ) {
             q.print();
-       /* } else if ( choice == "s" ) {
+        } else if ( choice == "s" ) {
             q.switch_light();
         } else if ( choice == "r" ) {
             cout << "  Input a new a amount for cycle: ";
@@ -31,7 +31,7 @@ int main()
                 cout << "Too small value, using 1 instead" << endl;
                 cycle = 1;
             }
-            q.reset_cycle(cycle); */
+            q.reset_cycle(cycle);
         } else if ( choice == "q" ) {
             break;
         } else {
