@@ -1,6 +1,6 @@
 #ifndef CARDS_HH
 #define CARDS_HH
-#include <memory>
+
 #include <iostream>
 
 class Cards {
@@ -36,16 +36,14 @@ class Cards {
       // when the data structure is not needed any more.
       ~Cards();
 
-private:
-  struct Card_data {
-    int data;
-    std::shared_ptr<Card_data> next;
-  };
+    private:
+      struct Card_data {
+        int data;
+        Card_data* next;
+      };
 
-  std::shared_ptr<Card_data> top_;
-
-      /* int recursive_print(Card_data* top, std::ostream& s);  // You can use this function in the implementation of method print_from_bottom_to_top.
-      Card_data* top_;*/
+      int recursive_print(Card_data* top, std::ostream& s);  // You can use this function in the implementation of method print_from_bottom_to_top.
+      Card_data* top_;
 };
 
 #endif // CARDS_HH
