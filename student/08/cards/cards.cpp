@@ -1,5 +1,6 @@
 #include "cards.hh"
-
+#include <iostream>
+#include <memory>
 
 Cards::Cards()
 {
@@ -8,7 +9,8 @@ Cards::Cards()
 
 void Cards::add(int id)
 {
-    Card_data* new_card = new Card_data{id,top_};
+    std::shared_ptr<Card_data> new_card
+            = std::make_shared<Card_data>(Card_data{id, top_});
     top_= new_card;
 }
 
@@ -39,7 +41,6 @@ bool Cards::remove(int& id)
     }
     auto temp = top_->next;
     id = top_->data;
-    delete top_;
     top_ = temp;
     return true;
 }
@@ -142,7 +143,6 @@ Cards::~Cards()
         {
             examiner2 = examiner2->next;
         }
-        delete temp;
         if (examiner2->next == nullptr){
             break;
         }
