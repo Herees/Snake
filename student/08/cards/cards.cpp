@@ -138,18 +138,11 @@ void Cards::print_from_bottom_to_top(std::ostream &s)
 
 Cards::~Cards()
 {
-    auto examiner2 = top_->next;
-    while (true)
+    while (top_ != nullptr)
     {
-        auto temp = top_;
-        top_ = examiner2;
-        if (examiner2->next != nullptr)
-        {
-            examiner2 = examiner2->next;
-        }
+        Card_data* temp = top_;
+        top_ = top_-> next;
         delete temp;
-        if (examiner2->next == nullptr){
-            break;
         }
     }
-}
+
