@@ -111,7 +111,8 @@ private:
      * Datastructure that contains all of the control points
      */
     std::map<std::string, Point*> points_;
-
+    int mapHeight_ = 0;
+    int mapWidth_ = 0;
 
 };
 
