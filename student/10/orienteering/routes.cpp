@@ -41,7 +41,25 @@ void Routes::add_point(std::string& name, int x, int y, int height, char marker)
 }
 
 bool Routes::connect_route(std::string& from, std::string& to, std::string& route_name){
-
+    bool foundFrom = false;
+    bool foundTo = false;
+    for(auto iter = points_.begin(); iter != points_.end(); ++iter){
+        if(iter->second->name_ == from){
+            foundFrom = true;
+            continue;
+        }
+        if(iter->second->name_ == to){
+            foundTo = true;
+            continue;
+        }
+    }
+        if (foundFrom && foundTo){
+            points_.at(to)->to_.insert(std::make_pair(route_name, points_.at(to)));
+            points_.at(to)->from_.insert(std::make_pair(route_name, points_.at(from)));
+            return true;
+        } else {
+            return false;
+        }
 }
 
 

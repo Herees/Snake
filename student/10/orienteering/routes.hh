@@ -28,6 +28,8 @@ struct Point{
     int y_;
     int height_;
     char marker_;
+    std::map<std::string, Point*> to_;
+    std::map<std::string, Point*> from_;
 };
 
 class Routes
