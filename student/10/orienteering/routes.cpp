@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <cmath>
 #include <algorithm>
+#include <cstdlib>
 
 
 Routes::Routes()
@@ -119,7 +120,10 @@ std::cout<<"Routes:"<<std::endl;
 
 void Routes::print_points() const
 {
-
+std::cout<<"Points:"<<std::endl;
+for(auto iter = points_.begin(); iter != points_.end(); ++iter){
+    std::cout<<" - "<<iter->first<<" : "<<iter->second->marker_<<std::endl;
+}
 }
 
 void Routes::print_route(const std::string &name) const {
@@ -136,7 +140,24 @@ void Routes::print_route(const std::string &name) const {
 
 void Routes::route_length(const std::string &name) const
 {
-
+    float length = 0;
+    for(auto iter = allRoutes.begin(); iter != allRoutes.end(); ++iter){
+        if(iter->first == name){
+            for(unsigned int i = 0; i < iter->second.size()-1; i++){
+               int x1 = points_.at(iter->second[i])->x_;
+               int y1 = points_.at(iter->second[i])->y_;
+               int x2 = points_.at(iter->second[i+1])->x_;
+               int y2 = points_.at(iter->second[i+1])->y_;
+               int xDif = abs(x2-x1);
+               std::cout<<xDif<<std::endl;
+               int yDif = abs(y2-y1);
+               std::cout<<yDif<<std::endl;
+               length += sqrt(xDif*xDif + yDif*yDif);
+            }
+            std::cout<<"Route "<<iter->first<<" length was "<<std::fixed<<std::setprecision(1)<<length<<std::endl;
+            break;
+        }
+}
 }
 
 void Routes::greatest_rise(const std::string &point_name) const
