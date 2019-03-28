@@ -108,11 +108,13 @@ public:
     void greatest_rise(const std::string& point_name) const;
 
 private:
+    void find_previous_point(Point &talteen, const std::string routeName) const;
     /**
      * @brief points_
      * Datastructure that contains all of the control points
      */
     std::map<std::string, Point*> points_;
+    std::map<std::string,std::vector<std::string>>allRoutes;
     int mapHeight_ = 0;
     int mapWidth_ = 0;
 
