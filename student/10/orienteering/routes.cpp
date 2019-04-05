@@ -113,7 +113,7 @@ void Routes::print_map() const {
         } else {
             std::cout<<yPrint;
         }
-        for (int xPrint = 1; xPrint < mapWidth_;xPrint++){
+        for (int xPrint = 1; xPrint < mapWidth_+1;xPrint++){
             found = false;
             for(auto iter = points_.begin(); iter != points_.end(); ++iter){
                  // Checking if the coordinate combination contains a point.
@@ -151,44 +151,52 @@ for(auto iter = points_.begin(); iter != points_.end(); ++iter){
 }
 
 void Routes::print_route(const std::string &name) const {
+    bool routeFound = false;
     //This for loop goes through all the routes in the allRoutes map.
     for(auto iter = allRoutes.begin(); iter != allRoutes.end(); ++iter){
         //If the input route is found, this if clause is fullfilled.
         if(iter->first == name){
-            std::cout<<iter->second[0]<<std::endl;
+            routeFound = true;
+            std::cout<<iter->second[0]->name_<<std::endl;
             //This for loop prints points on the route.
             for(unsigned int i = 1; i < iter->second.size(); i++){
-                std::cout<<" -> "<<iter->second[i]<<std::endl;
+                std::cout<<" -> "<<iter->second[i]->name_<<std::endl;
             }
             break;
-            }
         }
     }
+    if(!routeFound){
+        std::cout<<"Route named "<<name<<" can't be found"<<std::endl;
+    }
+}
 
-void Routes::route_length(const std::string &name) const
-{
+void Routes::route_length(const std::string &name) const{   
+    bool routeFound = false;
     // Variable length used to gather length of each path between points from the for loop.
     float length = 0;
     // This for loop goes through all routes in the allRoutes map.
     for(auto iter = allRoutes.begin(); iter != allRoutes.end(); ++iter){
         // If the input route is in the map, this if-clause fullfills.
         if(iter->first == name){
+            routeFound = true;
             for(unsigned int i = 0; i < iter->second.size()-1; i++){
                int x1 = iter->second[i]->x_;
                int y1 = iter->second[i]->y_;
                int x2 = iter->second[i+1]->x_;
                int y2 = iter->second[i+1]->y_;
                int xDif = abs(x2-x1);
-               std::cout<<xDif<<std::endl;
                int yDif = abs(y2-y1);
-               std::cout<<yDif<<std::endl;
                //Length of each path between two points on the route is added to length variable.
                length += sqrt(xDif*xDif + yDif*yDif);
             }
+        if(!routeFound){
+            std::cout<<"Route named "<<name<<" can't be found"<<std::endl;
+        } else {
             std::cout<<"Route "<<iter->first<<" length was "<<std::fixed<<std::setprecision(1)<<length<<std::endl;
             break;
         }
-}
+        }
+    }
 }
 
 void Routes::greatest_rise(const std::string &point_name) const {
@@ -196,13 +204,15 @@ void Routes::greatest_rise(const std::string &point_name) const {
     int rise1 = 0;
     int rise2 = 0;
     bool pointPassed = false;
+    bool pointFound = false;
     int previousPointHeight = 0;
             for(auto iter = allRoutes.begin(); iter != allRoutes.end(); ++iter){
                 pointPassed = false;
+
                 rise1 = 0;
                 for(Point* point: iter->second){
                     if(point->name_ == point_name){
-                        rise1 -= point->height_;
+                        pointFound = true;
                         previousPointHeight = point->height_;
                         pointPassed = true;
                         continue;
@@ -223,6 +233,8 @@ void Routes::greatest_rise(const std::string &point_name) const {
                 for(unsigned int i = 0; i < risingRoutes.size(); i++){
                     std::cout<<" - "<<risingRoutes[i]<<std::endl;
                 }
+            } else if(!pointFound) {
+                std::cout<<"Error: Point named "<<point_name<<" can't be found"<<std::endl;
             } else {
                 std::cout<<"No route rises after point "<<point_name<<std::endl;
             }
