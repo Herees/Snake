@@ -28,8 +28,6 @@ struct Point{
     int y_;
     int height_;
     char marker_;
-    std::map<std::string, Point*> to_;
-    std::map<std::string, Point*> from_;
 };
 
 class Routes
@@ -108,13 +106,16 @@ public:
     void greatest_rise(const std::string& point_name) const;
 
 private:
-    void find_previous_point(Point &talteen, const std::string routeName) const;
     /**
      * @brief points_
      * Datastructure that contains all of the control points
      */
     std::map<std::string, Point*> points_;
-    std::map<std::string,std::vector<std::string>>allRoutes;
+    /**
+     * @brief allRoutes
+     * Datastructure that contains all the routes. Route name is the key, and routes are stored in vector.
+     **/
+    std::map<std::string,std::vector<Point*>>allRoutes;
     int mapHeight_ = 0;
     int mapWidth_ = 0;
 

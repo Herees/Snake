@@ -1,3 +1,18 @@
+/*
+####################################################################
+# TIE-02207 Programming 2: Basics, S2019                           #
+#                                                                  #
+# Project: Orienteering                                            #
+# Program description: Program for orienteering. Seeing points and #
+# routes and the map.                                              #
+# File: routes.cpp                                                 #
+# Description: This class file contains all the functions for class#
+# Routes                                                           #
+# Author: Valtteri Kirsilä, 255342, valtteri.kirsila@tuni.fi       #
+####################################################################
+*/
+
+
 #include "routes.hh"
 #include <vector>
 #include <map>
@@ -32,6 +47,7 @@ void Routes::add_point(std::string& name, int x, int y, int height, char marker)
         std::cout<<"Error: Points exists"<<std::endl;
         return;
     }
+    // Makes a new point, save data from input file into the struct form.
     Point *point = new Point();
     point->name_ = name;
     point->x_ = x;
@@ -39,37 +55,38 @@ void Routes::add_point(std::string& name, int x, int y, int height, char marker)
     point->height_ = height;
     point->marker_ = marker;
     points_.insert(std::make_pair(name, point));
-
 }
 
 bool Routes::connect_route(std::string& from, std::string& to, std::string& route_name){
-    std::vector<std::string> a;
+    // std::vector<std::string> a;
     bool foundFrom = false;
     bool foundTo = false;
+
     for(auto iter = points_.begin(); iter != points_.end(); ++iter){
-        if(iter->second->name_ == from){
+        //These if clauses check if there are points to connect asked route between.
+        if(iter->first == from){
             foundFrom = true;
             continue;
         }
-        if(iter->second->name_ == to){
+        if(iter->first == to){
             foundTo = true;
             continue;
         }
     }
+    // If points before and after the route were found, adds route to allRoutes map.
         if (foundFrom && foundTo){
+            Point* fromPt = points_.at(from);
+            Point* toPt = points_.at(to);
+            // Checking that the route doesn't already exist in the map.
             auto iter2 = allRoutes.find(route_name);
+            // If route was not already in the map, adds it in.
             if(iter2 == allRoutes.end()){
-               allRoutes.insert(std::make_pair(route_name, a));
-               allRoutes.at(route_name).push_back(from);
-               allRoutes.at(route_name).push_back(to);
-            } else {
-               allRoutes.at(route_name).push_back(to);
-            }
-            /** points_.at(to)->to_.insert(std::make_pair(route_name, points_.at(to)));
-            points_.at(from)->from_.insert(std::make_pair(route_name, points_.at(from)));
-            if (std::find(allRoutes.begin(), allRoutes.end(), route_name) == allRoutes.end()){
-                allRoutes.push_back(route_name);**/
 
+               allRoutes[route_name]={fromPt,toPt};
+
+            } else {
+               allRoutes.at(route_name).push_back(toPt);
+            }
             return true;
         } else {
             return false;
@@ -78,6 +95,7 @@ bool Routes::connect_route(std::string& from, std::string& to, std::string& rout
 
 
 void Routes::print_map() const {
+    // Initializing variable found, which is used in printing points into the map.
     bool found = false;
     std::cout<<" ";
     for (int a= 1; a <= mapWidth_;a++){
@@ -88,6 +106,8 @@ void Routes::print_map() const {
         }
         }
     std::cout<<"\n";
+    /** These loops go through every x,y coordinate combination. 
+     * If that location contains a point, prints point marker. Else prints "." **/
     for (int yPrint = 1; yPrint <= mapHeight_;yPrint++){
         if(yPrint<10){std::cout<<" "<<yPrint;
         } else {
@@ -96,16 +116,20 @@ void Routes::print_map() const {
         for (int xPrint = 1; xPrint < mapWidth_;xPrint++){
             found = false;
             for(auto iter = points_.begin(); iter != points_.end(); ++iter){
+                 // Checking if the coordinate combination contains a point.
                 if(iter->second->y_ == yPrint && iter->second->x_ == xPrint){
+                    // Position contained point -> Print point marker.
                     std::cout<<"  "<<iter-> second->marker_;
                     found = true;
                     continue;
                 }
             }
             if (!found){
+                // Position did not contain marker, prints a dot.
               std::cout<<"  .";
             }
         }
+        //New line for next y-coordinate.
         std::cout<<'\n';
     }
 }
@@ -127,9 +151,12 @@ for(auto iter = points_.begin(); iter != points_.end(); ++iter){
 }
 
 void Routes::print_route(const std::string &name) const {
+    //This for loop goes through all the routes in the allRoutes map.
     for(auto iter = allRoutes.begin(); iter != allRoutes.end(); ++iter){
+        //If the input route is found, this if clause is fullfilled.
         if(iter->first == name){
             std::cout<<iter->second[0]<<std::endl;
+            //This for loop prints points on the route.
             for(unsigned int i = 1; i < iter->second.size(); i++){
                 std::cout<<" -> "<<iter->second[i]<<std::endl;
             }
@@ -140,18 +167,22 @@ void Routes::print_route(const std::string &name) const {
 
 void Routes::route_length(const std::string &name) const
 {
+    // Variable length used to gather length of each path between points from the for loop.
     float length = 0;
+    // This for loop goes through all routes in the allRoutes map.
     for(auto iter = allRoutes.begin(); iter != allRoutes.end(); ++iter){
+        // If the input route is in the map, this if-clause fullfills.
         if(iter->first == name){
             for(unsigned int i = 0; i < iter->second.size()-1; i++){
-               int x1 = points_.at(iter->second[i])->x_;
-               int y1 = points_.at(iter->second[i])->y_;
-               int x2 = points_.at(iter->second[i+1])->x_;
-               int y2 = points_.at(iter->second[i+1])->y_;
+               int x1 = iter->second[i]->x_;
+               int y1 = iter->second[i]->y_;
+               int x2 = iter->second[i+1]->x_;
+               int y2 = iter->second[i+1]->y_;
                int xDif = abs(x2-x1);
                std::cout<<xDif<<std::endl;
                int yDif = abs(y2-y1);
                std::cout<<yDif<<std::endl;
+               //Length of each path between two points on the route is added to length variable.
                length += sqrt(xDif*xDif + yDif*yDif);
             }
             std::cout<<"Route "<<iter->first<<" length was "<<std::fixed<<std::setprecision(1)<<length<<std::endl;
@@ -160,8 +191,42 @@ void Routes::route_length(const std::string &name) const
 }
 }
 
-void Routes::greatest_rise(const std::string &point_name) const
-{
+void Routes::greatest_rise(const std::string &point_name) const {
+    std::vector<std::string>risingRoutes;
+    int rise1 = 0;
+    int rise2 = 0;
+    bool pointPassed = false;
+    int previousPointHeight = 0;
+            for(auto iter = allRoutes.begin(); iter != allRoutes.end(); ++iter){
+                pointPassed = false;
+                rise1 = 0;
+                for(Point* point: iter->second){
+                    if(point->name_ == point_name){
+                        rise1 -= point->height_;
+                        previousPointHeight = point->height_;
+                        pointPassed = true;
+                        continue;
+                    }
+                    if(pointPassed && point->height_>previousPointHeight){
+
+                        rise1 += point->height_ - previousPointHeight;
+                    }
+                }
+                if(rise1 > rise2){
+                    rise2 = rise1;
+                    risingRoutes.clear();
+                    risingRoutes.push_back(iter->first);
+                }
+            }
+            if(rise2>0){
+                std::cout<<"Greatest rise after point "<<point_name<<", "<<rise2<< "m meters, is on route(s):"<<std::endl;
+                for(unsigned int i = 0; i < risingRoutes.size(); i++){
+                    std::cout<<" - "<<risingRoutes[i]<<std::endl;
+                }
+            } else {
+                std::cout<<"No route rises after point "<<point_name<<std::endl;
+            }
 
 }
+
 
