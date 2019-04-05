@@ -166,7 +166,7 @@ void Routes::print_route(const std::string &name) const {
         }
     }
     if(!routeFound){
-        std::cout<<"Route named "<<name<<" can't be found"<<std::endl;
+        std::cout<<"Error: Route named "<<name<<" can't be found"<<std::endl;
     }
 }
 
@@ -189,12 +189,14 @@ void Routes::route_length(const std::string &name) const{
                //Length of each path between two points on the route is added to length variable.
                length += sqrt(xDif*xDif + yDif*yDif);
             }
-        if(!routeFound){
-            std::cout<<"Route named "<<name<<" can't be found"<<std::endl;
-        } else {
-            std::cout<<"Route "<<iter->first<<" length was "<<std::fixed<<std::setprecision(1)<<length<<std::endl;
-            break;
         }
+    } if(!routeFound){
+        std::cout<<"Route named "<<name<<" can't be found"<<std::endl;
+    } else {
+        if (length < 10){
+            std::cout<<"Route "<<name<<" length was "<<std::fixed<<std::setprecision(1)<<length<<std::endl;
+        } else {
+            std::cout<<"Route "<<name<<" length was "<<std::fixed<<std::setprecision(0)<<length<<std::endl;
         }
     }
 }
@@ -208,7 +210,6 @@ void Routes::greatest_rise(const std::string &point_name) const {
     int previousPointHeight = 0;
             for(auto iter = allRoutes.begin(); iter != allRoutes.end(); ++iter){
                 pointPassed = false;
-
                 rise1 = 0;
                 for(Point* point: iter->second){
                     if(point->name_ == point_name){
@@ -218,18 +219,20 @@ void Routes::greatest_rise(const std::string &point_name) const {
                         continue;
                     }
                     if(pointPassed && point->height_>previousPointHeight){
-
                         rise1 += point->height_ - previousPointHeight;
+                        previousPointHeight = point->height_;
                     }
                 }
                 if(rise1 > rise2){
                     rise2 = rise1;
                     risingRoutes.clear();
                     risingRoutes.push_back(iter->first);
+                } else if(rise1 == rise2) {
+                    risingRoutes.push_back(iter->first);
                 }
             }
             if(rise2>0){
-                std::cout<<"Greatest rise after point "<<point_name<<", "<<rise2<< "m meters, is on route(s):"<<std::endl;
+                std::cout<<"Greatest rise after point "<<point_name<<", "<<rise2<< " meters, is on route(s):"<<std::endl;
                 for(unsigned int i = 0; i < risingRoutes.size(); i++){
                     std::cout<<" - "<<risingRoutes[i]<<std::endl;
                 }
