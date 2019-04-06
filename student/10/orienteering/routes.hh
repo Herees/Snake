@@ -113,7 +113,7 @@ private:
     std::map<std::string, Point*> points_;
     /**
      * @brief allRoutes
-     * Datastructure that contains all the routes. Route name is the key, and routes are stored in vector.
+     * Datastructure that contains all the routes. Route name is the key, and routes are stored in vector as pointers.
      **/
     std::map<std::string,std::vector<Point*>>allRoutes;
     int mapHeight_ = 0;

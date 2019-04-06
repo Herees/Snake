@@ -31,7 +31,9 @@ Routes::Routes()
 
 Routes::~Routes()
 {
-
+    for(auto iter = points_.begin(); iter != points_.end(); ++iter){
+        delete iter->second;
+    }
 }
 
 
@@ -44,7 +46,6 @@ mapWidth_ = width;
 void Routes::add_point(std::string& name, int x, int y, int height, char marker){
     std::map<std::string, Point*>::iterator iter = points_.find(name);
     if (iter != points_.end()){
-        std::cout<<"Error: Points exists"<<std::endl;
         return;
     }
     // Makes a new point, save data from input file into the struct form.
@@ -73,7 +74,7 @@ bool Routes::connect_route(std::string& from, std::string& to, std::string& rout
             continue;
         }
     }
-    // If points before and after the route were found, adds route to allRoutes map.
+    // If points before and after the route were found, adds route as pointers into allRoutes map.
         if (foundFrom && foundTo){
             Point* fromPt = points_.at(from);
             Point* toPt = points_.at(to);
@@ -151,6 +152,7 @@ for(auto iter = points_.begin(); iter != points_.end(); ++iter){
 }
 
 void Routes::print_route(const std::string &name) const {
+    // Boolean routeFound, used for errorous inputs
     bool routeFound = false;
     //This for loop goes through all the routes in the allRoutes map.
     for(auto iter = allRoutes.begin(); iter != allRoutes.end(); ++iter){
@@ -170,7 +172,8 @@ void Routes::print_route(const std::string &name) const {
     }
 }
 
-void Routes::route_length(const std::string &name) const{   
+void Routes::route_length(const std::string &name) const{
+    // Boolean routeFound is used for errorous inputs.
     bool routeFound = false;
     // Variable length used to gather length of each path between points from the for loop.
     float length = 0;
@@ -191,7 +194,7 @@ void Routes::route_length(const std::string &name) const{
             }
         }
     } if(!routeFound){
-        std::cout<<"Route named "<<name<<" can't be found"<<std::endl;
+        std::cout<<"Error: Route named "<<name<<" can't be found"<<std::endl;
     } else {
         if (length < 10){
             std::cout<<"Route "<<name<<" length was "<<std::fixed<<std::setprecision(1)<<length<<std::endl;
@@ -202,32 +205,49 @@ void Routes::route_length(const std::string &name) const{
 }
 
 void Routes::greatest_rise(const std::string &point_name) const {
+    /** Initializing a vector for the route(s) with biggest rise.
+     * integers rise1 and 2 are used in comparing rises between routes.
+     * boolean pointpassed is used in finding the starting point
+     * boolean pointFound is used in determining if the input point exists.
+     **/
     std::vector<std::string>risingRoutes;
     int rise1 = 0;
     int rise2 = 0;
     bool pointPassed = false;
     bool pointFound = false;
     int previousPointHeight = 0;
+            // Loop through all routes
             for(auto iter = allRoutes.begin(); iter != allRoutes.end(); ++iter){
                 pointPassed = false;
                 rise1 = 0;
+                // Loop for all points in a route
                 for(Point* point: iter->second){
+                    // This if clause fullfills after starting point is found in route.
                     if(point->name_ == point_name){
+                        // Point was on a route
                         pointFound = true;
                         previousPointHeight = point->height_;
+                        // Starting point found
                         pointPassed = true;
                         continue;
                     }
+                    // If starting point was found, and route is still rising, this if clause fullfills.
                     if(pointPassed && point->height_>previousPointHeight){
-                        rise1 += point->height_ - previousPointHeight;
+                        rise1 += (point->height_ - previousPointHeight);
                         previousPointHeight = point->height_;
+                    } else if(point->height_<previousPointHeight){
+                        break;
                     }
                 }
+                // If the rise on this route was higher than the highest rise before
                 if(rise1 > rise2){
                     rise2 = rise1;
+                    // Clears vector of all previous routes, as the current rise was higher.
                     risingRoutes.clear();
                     risingRoutes.push_back(iter->first);
+                    // If the rise is equal to highest rise
                 } else if(rise1 == rise2) {
+                    // Also add this route to the vector, along with the equally big rise
                     risingRoutes.push_back(iter->first);
                 }
             }
@@ -236,6 +256,7 @@ void Routes::greatest_rise(const std::string &point_name) const {
                 for(unsigned int i = 0; i < risingRoutes.size(); i++){
                     std::cout<<" - "<<risingRoutes[i]<<std::endl;
                 }
+                // Point was not on any route (Doesn't exist.)
             } else if(!pointFound) {
                 std::cout<<"Error: Point named "<<point_name<<" can't be found"<<std::endl;
             } else {
