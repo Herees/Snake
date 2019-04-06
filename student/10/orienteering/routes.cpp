@@ -220,6 +220,7 @@ void Routes::greatest_rise(const std::string &point_name) const {
             for(auto iter = allRoutes.begin(); iter != allRoutes.end(); ++iter){
                 pointPassed = false;
                 rise1 = 0;
+                previousPointHeight = 0;
                 // Loop for all points in a route
                 for(Point* point: iter->second){
                     // This if clause fullfills after starting point is found in route.
