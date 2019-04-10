@@ -42,6 +42,7 @@ void MainWindow::reset(){
     ui->lcdNumberMin->display(min);
     ui->lcdNumberSec->display(sec);
     timer->stop();
+    timer->start(1000);
 }
 
 void MainWindow::stop(){
