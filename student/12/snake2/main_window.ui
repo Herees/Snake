@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>960</width>
+    <width>1050</width>
     <height>540</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>960</width>
+    <width>1050</width>
     <height>540</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>960</width>
+    <width>1050</width>
     <height>540</height>
    </size>
   </property>
@@ -28,13 +28,13 @@
   <widget class="QWidget" name="centralwidget">
    <property name="minimumSize">
     <size>
-     <width>960</width>
+     <width>1050</width>
      <height>540</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
-     <width>960</width>
+     <width>1050</width>
      <height>540</height>
     </size>
    </property>
@@ -56,77 +56,134 @@
      <rect>
       <x>30</x>
       <y>20</y>
-      <width>900</width>
-      <height>400</height>
+      <width>1001</width>
+      <height>401</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>900</width>
-      <height>400</height>
+      <width>1001</width>
+      <height>401</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>900</width>
-      <height>400</height>
+      <width>1001</width>
+      <height>401</height>
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="upButton">
+   <widget class="QSpinBox" name="spinBoxSize">
     <property name="geometry">
      <rect>
-      <x>420</x>
+      <x>570</x>
+      <y>450</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBoxDifficulty">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>450</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="lcdNumberTime">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>430</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelScore">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>480</y>
+      <width>63</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Score</string>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="lcdNumberScore">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>480</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelSize">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
       <y>460</y>
-      <width>84</width>
-      <height>28</height>
+      <width>63</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>UP</string>
+     <string>Size</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="leftButton">
+   <widget class="QLabel" name="labelTime">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>500</y>
-      <width>84</width>
-      <height>28</height>
+      <x>830</x>
+      <y>430</y>
+      <width>63</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>LEFT</string>
+     <string>Time</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="downButton">
+   <widget class="QLabel" name="labelDifficulty">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>500</y>
-      <width>84</width>
-      <height>28</height>
+      <x>200</x>
+      <y>460</y>
+      <width>63</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>DOWN</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="rightButton">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>500</y>
-      <width>84</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>RIGHT</string>
+     <string>Difficulty</string>
     </property>
    </widget>
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>playButton</sender>
+   <signal>clicked()</signal>
+   <receiver>playButton</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>470</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>85</x>
+     <y>470</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

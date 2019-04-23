@@ -50,7 +50,7 @@ public:
      * \param[in] event Contains data on pressed and released keys.
      */
     void keyPressEvent(QKeyEvent* event) override;
-    void grow(QPointF);
+    void grow();
     void moveTail(QPointF);
 
 
@@ -77,11 +77,15 @@ private:
      * Should be called every time the field's size changes.
      */
     void adjustSceneArea();
+    void gameOver();
 
-    Ui::MainWindow ui_;                 /**< Accesses the UI widgets. */
+    Ui::MainWindow *ui_; /**< Accesses the UI widgets. */
+    int size = 0;
     QGraphicsRectItem* snake_ = nullptr;
     int xDir = 0;
     int yDir = 0;
+    int points = 0;
+    bool hasMoved = false;
     QList<QGraphicsRectItem*> tailList;
     QGraphicsRectItem* tail_ = nullptr;
     QGraphicsRectItem* food_ = nullptr; /**< The food item in the scene. */

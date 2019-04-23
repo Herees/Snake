@@ -25,85 +25,125 @@
 #include <QKeyEvent>
 #include <ui_main_window.h>
 #include <iostream>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget* parent):
-    QMainWindow(parent) {
+    QMainWindow(parent),
+    ui_(new Ui::MainWindow){
 
-    ui_.setupUi(this);
-    ui_.graphicsView->setScene(&scene_);
+    ui_->setupUi(this);
+    ui_->spinBoxDifficulty->setMinimum(1);
+    ui_->spinBoxDifficulty->setMaximum(10);
+    ui_->spinBoxSize->setMinimum(1);
+    ui_->spinBoxSize->setMaximum(10);
+    ui_->graphicsView->setScene(&scene_);
 
     connect(&timer_, &QTimer::timeout, this, &MainWindow::moveSnake);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {
-    // Move up
-    if (event->key() == Qt::Key_W){
-        xDir = 0;
-        yDir = -1;
-    } if (event->key() == Qt::Key_S){
-        xDir = 0;
-        yDir = 1;
-    } if (event->key() == Qt::Key_A){
-        xDir = -1;
-        yDir = 0;
-    } if (event->key() == Qt::Key_D){
-        xDir = 1;
-        yDir = 0;
+    if (hasMoved){
+        if (event->key() == Qt::Key_W && yDir != 1){
+            xDir = 0;
+            yDir = -1;
+            hasMoved = false;
+        } if (event->key() == Qt::Key_S && yDir != -1){
+            xDir = 0;
+            yDir = 1;
+            hasMoved = false;
+        } if (event->key() == Qt::Key_A && xDir != 1){
+            xDir = -1;
+            yDir = 0;
+            hasMoved = false;
+        } if (event->key() == Qt::Key_D && xDir != -1){
+            xDir = 1;
+            yDir = 0;
+            hasMoved = false;
+        }
     }
-
 }
 
 void MainWindow::on_playButton_clicked() {
     // EXAMPLE: How to create new graphics items in the scene.
-    const QRectF snake_rect(0, 0, 1, 1);
+    size = ui_->spinBoxSize->value()*10;
+    const QRectF head_rect(0, 0, 1, 1);
     const QRectF food_rect(0, 0, 1, 1);
     const QPen pen(Qt::white, 0);
-    const QBrush brush2(Qt::green);
+    const QBrush brush2(Qt::darkGreen);
     const QBrush brush(Qt::black);
-    snake_ = scene_.addRect(snake_rect, pen, brush2);
+    snake_ = scene_.addRect(head_rect, pen, brush2);
     snake_->setPos(0, 0);
     food_ = scene_.addRect(food_rect, pen, brush);
     food_->setPos(9, 5);
     xDir = 1;
 
     adjustSceneArea();
-    timer_.start(1000);
+    timer_.start(1000/ui_->spinBoxDifficulty->value());
 }
 
-void MainWindow::grow(QPointF oldHeadPos){
+void MainWindow::grow(){
     const QRectF snake_rect(0, 0, 1, 1);
-    const QBrush brush3(Qt::darkGreen);
+    const QBrush brush3(Qt::green);
     const QPen pen(Qt::white, 0);
     tail_ = scene_.addRect(snake_rect, pen, brush3);
-    tail_->setPos(oldHeadPos);
-    tailList.append(tail_);
-    moveSnake();
+    tail_->setPos(snake_->pos());
+    tailList.prepend(tail_);
 }
 
 void MainWindow::moveTail(QPointF oldHeadPos){
-    for (size_t i = 0; i < tailList.size()-1; i++){
+    if(tailList.size() == 0){
+        return;
+    } if(tailList.size() == 1){
+        tailList[0]->setPos(oldHeadPos);
+    } else {
+    for (int i = 0; i < tailList.size()-1; i++){
         tailList[i]->setPos(tailList[i+1]->pos());
     }
     tailList.last()->setPos(oldHeadPos);
+    }
 }
 
 void MainWindow::moveSnake() {
     // EXAMPLE: How to move a graphics item left in the scene.
     const QPointF oldHeadPos = snake_->scenePos();
-    const QPointF newHeadPos = oldHeadPos + QPoint(xDir, yDir);
-    snake_->setPos(newHeadPos);
-    if (tailList.size() > 0){
-        moveTail(oldHeadPos);
+    if (snake_->x() == 0 && xDir == -1){
+        const QPointF newHeadPos = oldHeadPos + QPoint(size-1, yDir);
+        snake_->setPos(newHeadPos);
+    } else if((snake_->x() == size-1 && xDir == 1)){
+        const QPointF newHeadPos = oldHeadPos + QPoint(-size+1, yDir);
+        snake_->setPos(newHeadPos);
+    } else if((snake_->y() == 0 && yDir == -1)){
+        const QPointF newHeadPos = oldHeadPos + QPoint(xDir, size-1);
+        snake_->setPos(newHeadPos);
+    } else if((snake_->y() == size-1 && yDir == 1)){
+        const QPointF newHeadPos = oldHeadPos + QPoint(xDir, -size+1);
+        snake_->setPos(newHeadPos);
+    } else {
+        const QPointF newHeadPos = oldHeadPos + QPoint(xDir, yDir);
+        snake_->setPos(newHeadPos);
     }
     if (snake_->pos() == food_->pos()){
-            food_->setPos(rand()%10,rand()%10);
-            grow(oldHeadPos);
+        food_->setPos(rand()%size,rand()%size);
+        grow();
+    } else if (tailList.size() > 0){
+        for(int i = 0; i < tailList.size()-1; i++){
+            if(snake_->pos() == tailList[i]->pos()){
+                gameOver();
+            }
+        }
+    }
+    moveTail(oldHeadPos);
+    hasMoved = true;
 }
+
+void MainWindow::gameOver(){
+    timer_.stop();
+    QMessageBox::information(this, tr("Game over!"), QString("Game over :^( You scored %1 points!").arg(points));
 }
 
 void MainWindow::adjustSceneArea() {
     // TODO: Replace the area's size with the play field's actual size.
-    const QRectF area(0, 0, 10, 10);
+    const QRectF area(0, 0, size, size);
     scene_.setSceneRect(area);
-    ui_.graphicsView->fitInView(area);
+    ui_->graphicsView->fitInView(area);
 }
