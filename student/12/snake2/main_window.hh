@@ -68,6 +68,7 @@ private slots:
 
 
     void moveSnake();
+    void timer();
 
 
 private:
@@ -82,15 +83,18 @@ private:
     Ui::MainWindow *ui_; /**< Accesses the UI widgets. */
     int size = 0;
     QGraphicsRectItem* snake_ = nullptr;
+    int time = 0;
     int xDir = 0;
     int yDir = 0;
-    int points = 0;
+    int score = 0;
+    int highScore = 0;
     bool hasMoved = false;
     QList<QGraphicsRectItem*> tailList;
     QGraphicsRectItem* tail_ = nullptr;
     QGraphicsRectItem* food_ = nullptr; /**< The food item in the scene. */
     QGraphicsScene scene_;              /**< Manages drawable objects. */
     QTimer timer_;                      /**< Triggers the Snake to move. */
+    QTimer timer2_;
     std::default_random_engine rng_;    /**< Randomizes food locations. */
 
 };  // class MainWindow

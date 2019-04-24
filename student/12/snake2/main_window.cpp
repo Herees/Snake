@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget* parent):
     ui_->graphicsView->setScene(&scene_);
 
     connect(&timer_, &QTimer::timeout, this, &MainWindow::moveSnake);
+    connect(&timer2_, &QTimer::timeout, this, &MainWindow::timer);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {
@@ -76,9 +77,16 @@ void MainWindow::on_playButton_clicked() {
     food_ = scene_.addRect(food_rect, pen, brush);
     food_->setPos(9, 5);
     xDir = 1;
-
     adjustSceneArea();
     timer_.start(1000/ui_->spinBoxDifficulty->value());
+    ui_->lcdNumberTime->display(0);
+    ui_->lcdNumberScore->display(0);
+    timer2_.start(1000);
+}
+
+void MainWindow::timer(){
+    time += 1;
+    ui_->lcdNumberTime->display(time);
 }
 
 void MainWindow::grow(){
@@ -124,7 +132,9 @@ void MainWindow::moveSnake() {
     }
     if (snake_->pos() == food_->pos()){
         food_->setPos(rand()%size,rand()%size);
+        score ++;
         grow();
+        ui_->lcdNumberScore->display(score);
     } else if (tailList.size() > 0){
         for(int i = 0; i < tailList.size()-1; i++){
             if(snake_->pos() == tailList[i]->pos()){
@@ -137,8 +147,31 @@ void MainWindow::moveSnake() {
 }
 
 void MainWindow::gameOver(){
+    bool newRecord = false;
     timer_.stop();
-    QMessageBox::information(this, tr("Game over!"), QString("Game over :^( You scored %1 points!").arg(points));
+    timer2_.stop();
+    if(score > highScore){
+        highScore = score;
+        newRecord = true;
+    }
+    delete snake_;
+    delete food_;
+    xDir = 1;
+    yDir = 0;
+    for(int i = 0; i < tailList.size(); i++){
+        scene_.removeItem(tailList[i]);
+    }
+    tailList.clear();
+    ui_->playButton->setText("Play again?");
+    ui_->playButton->show();
+    if (newRecord){
+        QMessageBox::information(this, tr("New record!"), QString("Game over :^( New record: %1 points in %2 seconds!").arg(score).arg(time));
+    } else {
+        QMessageBox::information(this, tr("Game over!"), QString("Game over :^( You scored %1 points in %2 seconds!").arg(score).arg(time));
+    }
+    ui_->lcdNumberHighScore->display(highScore);
+    score = 0;
+    time = 0;
 }
 
 void MainWindow::adjustSceneArea() {
