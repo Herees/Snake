@@ -44,7 +44,7 @@
       <x>30</x>
       <y>450</y>
       <width>100</width>
-      <height>30</height>
+      <height>50</height>
      </rect>
     </property>
     <property name="text">
@@ -79,7 +79,7 @@
       <x>400</x>
       <y>450</y>
       <width>100</width>
-      <height>30</height>
+      <height>50</height>
      </rect>
     </property>
    </widget>
@@ -89,7 +89,7 @@
       <x>230</x>
       <y>450</y>
       <width>100</width>
-      <height>30</height>
+      <height>50</height>
      </rect>
     </property>
    </widget>
@@ -99,7 +99,7 @@
       <x>560</x>
       <y>450</y>
       <width>100</width>
-      <height>30</height>
+      <height>50</height>
      </rect>
     </property>
    </widget>
@@ -122,17 +122,17 @@
       <x>720</x>
       <y>450</y>
       <width>100</width>
-      <height>30</height>
+      <height>50</height>
      </rect>
     </property>
    </widget>
    <widget class="QLabel" name="labelSize">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>460</y>
-      <width>63</width>
-      <height>20</height>
+      <x>360</x>
+      <y>440</y>
+      <width>100</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="text">
@@ -171,7 +171,7 @@
       <x>920</x>
       <y>450</y>
       <width>100</width>
-      <height>30</height>
+      <height>50</height>
      </rect>
     </property>
    </widget>
@@ -188,25 +188,21 @@
      <string>High Score</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pauseButton">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>450</y>
+      <width>100</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Pause</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>playButton</sender>
-   <signal>clicked()</signal>
-   <receiver>playButton</receiver>
-   <slot>hide()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>85</x>
-     <y>470</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>85</x>
-     <y>470</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

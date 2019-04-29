@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget* parent):
     ui_->spinBoxSize->setMinimum(1);
     ui_->spinBoxSize->setMaximum(10);
     ui_->graphicsView->setScene(&scene_);
+    ui_->pauseButton->hide();
 
     connect(&timer_, &QTimer::timeout, this, &MainWindow::moveSnake);
     connect(&timer2_, &QTimer::timeout, this, &MainWindow::timer);
@@ -60,6 +61,8 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
             xDir = 1;
             yDir = 0;
             hasMoved = false;
+        } if (event->key() == Qt::Key_P){
+            on_pauseButton_clicked();
         }
     }
 }
@@ -68,20 +71,40 @@ void MainWindow::on_playButton_clicked() {
     // EXAMPLE: How to create new graphics items in the scene.
     size = ui_->spinBoxSize->value()*10;
     const QRectF head_rect(0, 0, 1, 1);
-    const QRectF food_rect(0, 0, 1, 1);
     const QPen pen(Qt::white, 0);
     const QBrush brush2(Qt::darkGreen);
     const QBrush brush(Qt::black);
+    // const QBrush brush3(Qt::red);
     snake_ = scene_.addRect(head_rect, pen, brush2);
     snake_->setPos(0, 0);
-    food_ = scene_.addRect(food_rect, pen, brush);
+    food_ = scene_.addRect(head_rect, pen, brush);
     food_->setPos(9, 5);
+    // bonus_ = scene_.addRect(head_rect, pen, brush3);
     xDir = 1;
     adjustSceneArea();
     timer_.start(1000/ui_->spinBoxDifficulty->value());
     ui_->lcdNumberTime->display(0);
     ui_->lcdNumberScore->display(0);
+    ui_->playButton->hide();
+    ui_->pauseButton->setText("Pause");
+    ui_->pauseButton->show();
+    ui_->spinBoxDifficulty->setDisabled(true);
+    ui_->spinBoxSize->setDisabled(true);
     timer2_.start(1000);
+}
+
+void MainWindow::on_pauseButton_clicked(){
+    if (!isPaused){
+        timer_.stop();
+        timer2_.stop();
+        isPaused = true;
+        ui_->pauseButton->setText("Unpause");
+    } else {
+        isPaused = false;
+        timer_.start(1000/ui_->spinBoxDifficulty->value());
+        timer2_.start(1000);
+        ui_->pauseButton->setText("Pause");
+    }
 }
 
 void MainWindow::timer(){
@@ -111,6 +134,18 @@ void MainWindow::moveTail(QPointF oldHeadPos){
     }
 }
 
+void MainWindow::generateFood(){
+    food_->setPos(rand()%size,rand()%size);
+    if(food_->pos() == snake_->pos()){
+        generateFood();
+    }
+    for(int i = 0; i < tailList.size()-1; i++){
+        if(food_->pos() == tailList[i]->pos()){
+            generateFood();
+        }
+    }
+}
+
 void MainWindow::moveSnake() {
     // EXAMPLE: How to move a graphics item left in the scene.
     const QPointF oldHeadPos = snake_->scenePos();
@@ -131,8 +166,8 @@ void MainWindow::moveSnake() {
         snake_->setPos(newHeadPos);
     }
     if (snake_->pos() == food_->pos()){
-        food_->setPos(rand()%size,rand()%size);
-        score ++;
+        generateFood();
+        score += ui_->spinBoxDifficulty->value();
         grow();
         ui_->lcdNumberScore->display(score);
     } else if (tailList.size() > 0){
@@ -164,6 +199,9 @@ void MainWindow::gameOver(){
     tailList.clear();
     ui_->playButton->setText("Play again?");
     ui_->playButton->show();
+    ui_->pauseButton->hide();
+    ui_->spinBoxDifficulty->setDisabled(false);
+    ui_->spinBoxSize->setDisabled(false);
     if (newRecord){
         QMessageBox::information(this, tr("New record!"), QString("Game over :^( New record: %1 points in %2 seconds!").arg(score).arg(time));
     } else {

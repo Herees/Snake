@@ -59,6 +59,7 @@ private slots:
     /* \brief Start the game.
      */
     void on_playButton_clicked();
+    void on_pauseButton_clicked();
 
     /* \brief Move the Snake by a square and check for collisions.
      *
@@ -66,7 +67,7 @@ private slots:
      * When a food gets eaten a point is gained and the Snake grows.
      */
 
-
+    void generateFood();
     void moveSnake();
     void timer();
 
@@ -89,9 +90,11 @@ private:
     int score = 0;
     int highScore = 0;
     bool hasMoved = false;
+    bool isPaused = false;
     QList<QGraphicsRectItem*> tailList;
     QGraphicsRectItem* tail_ = nullptr;
     QGraphicsRectItem* food_ = nullptr; /**< The food item in the scene. */
+    QGraphicsRectItem* bonus_ = nullptr;
     QGraphicsScene scene_;              /**< Manages drawable objects. */
     QTimer timer_;                      /**< Triggers the Snake to move. */
     QTimer timer2_;
